@@ -4,14 +4,16 @@
 const int ARR_SIZE = 990;
 int src[ARR_SIZE][ARR_SIZE], dst[ARR_SIZE][ARR_SIZE];
 
-void copyij(int src[ARR_SIZE][ARR_SIZE], int dst[ARR_SIZE][ARR_SIZE]) {
+void copyij(int src[ARR_SIZE][ARR_SIZE],
+        int dst[ARR_SIZE][ARR_SIZE]) {
     int i, j;
     for (i = 0; i < ARR_SIZE; i++)
         for (j = 0; j < ARR_SIZE; j++)
             dst[i][j] = src[i][j];
 }
 
-void copyji(int src[ARR_SIZE][ARR_SIZE], int dst[ARR_SIZE][ARR_SIZE]) {
+void copyji(int src[ARR_SIZE][ARR_SIZE],
+        int dst[ARR_SIZE][ARR_SIZE]) {
     int i, j;
     for (j = 0; j < ARR_SIZE; j++)
         for (i = 0; i < ARR_SIZE; i++)
