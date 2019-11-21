@@ -1,67 +1,75 @@
 #include <stdio.h>
 #include<time.h>
+#include <stdlib.h>
 
-const int ARR_SIZE = 990;
-int src[ARR_SIZE][ARR_SIZE], dst[ARR_SIZE][ARR_SIZE];
-
-void copyij(int src[ARR_SIZE][ARR_SIZE],
-        int dst[ARR_SIZE][ARR_SIZE]) {
-    int i, j;
-    for (i = 0; i < ARR_SIZE; i++)
-        for (j = 0; j < ARR_SIZE; j++)
-            dst[i][j] = src[i][j];
-}
-
-void copyji(int src[ARR_SIZE][ARR_SIZE],
-        int dst[ARR_SIZE][ARR_SIZE]) {
-    int i, j;
-    for (j = 0; j < ARR_SIZE; j++)
-        for (i = 0; i < ARR_SIZE; i++)
-            dst[i][j] = src[i][j];
-}
-
-
-
-int main() {
-
-    int i, j;
-
-    printf("size of int: %ld \n", sizeof(int));
-    printf("size of src: %ld \n", sizeof(src));
-
-    for (i = 0; i < ARR_SIZE; i++) {
-        for (j = 0; j < ARR_SIZE; j++) {
-            src[i][j] = 1;
-            dst[i][j] = 0;
+int times = 10;
+/**
+ * 间隔 step 距离，对两数组进行复制
+ * @param src 源数组
+ * @param dst 目标数组
+ * @param len 数组长度
+ * @param step 访问间隔
+ */
+void copy_by_step(int *src, int *dst,
+                  int len, int step){
+    for(int i = 0; i < step; i++){
+        for(int j = i; j < len; j= j + step){
+            dst[j] = src[j];
         }
     }
-    int begintime_ij = clock();
-    copyij(src, dst);
-    int endtime_ij = clock();
+}
 
-    for (i = 0; i < ARR_SIZE; i++) {
-        for (j = 0; j < ARR_SIZE; j++) {
-            src[i][j] = 1;
-            dst[i][j] = 0;
-        }
+
+void test(int arrLen, int step){
+    int *src, *dst;
+
+    src = (int*)malloc( arrLen*sizeof(int) );
+    dst = (int*)malloc( arrLen*sizeof(int) );
+    if(!src && !dst){
+        printf("创建数组失败！\n");
+        exit(1);
     }
-    int begintime_ji = clock();
-    copyji(src, dst);
-    int endtime_ji = clock();
 
 
-    double duration_ij = (double) (endtime_ij - begintime_ij) / CLOCKS_PER_SEC;
-    double duration_ji = (double) (endtime_ji - begintime_ji) / CLOCKS_PER_SEC;
+    for(int i=0; i<arrLen; i++){
+        src[i] = 1;
+        dst[i] = 0;
+    }
 
+    int begintime = clock();
+    for (int j = 0; j < times; ++j) {
+        copy_by_step(src, dst, arrLen, step);
+    }
+    int endtime = clock();
+
+    double duration = (double) (endtime - begintime) / CLOCKS_PER_SEC / times;
 
     FILE *fp = NULL;
 
-    fp = fopen("/Users/Rui/workspace/works/com.ruipages/learning_csapp/test.txt", "a");
-    fprintf(fp, "ij,%d,%f\n", ARR_SIZE, duration_ij);
-    fprintf(fp, "ji,%d,%f\n", ARR_SIZE, duration_ji);
+    fp = fopen("/Users/Rui/workspace/works/com.ruipages/learning_csapp/test3.txt", "a");
+    fprintf(fp, "%d,%d,%f\n", arrLen,step, duration);
     fclose(fp);
+
+}
+
+int main() {
+    FILE *fp = NULL;
+
+    fp = fopen("/Users/Rui/workspace/works/com.ruipages/learning_csapp/test3.txt", "w+");
+    fclose(fp);
+
+    int len_base = 10;
+    int max_len = 1000;
+
+    for (int len = len_base; len < max_len; len = len + 10) {
+        test(len * len, 1);
+        test(len * len, len);
+    }
+
 
     printf("finished");
 
     return 0;
 }
+
+
