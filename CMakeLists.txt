@@ -4,5 +4,5 @@ project(learning_csapp C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(learning_csapp
-        copy_ij.c)
+        focus/copy_ij.c)
 
